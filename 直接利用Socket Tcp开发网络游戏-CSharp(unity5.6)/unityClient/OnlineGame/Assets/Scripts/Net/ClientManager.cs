@@ -9,6 +9,9 @@ public class ClientManager :BaseManager{
     private const int PORT = 6688;
     private Socket clientSocket;
     private Message msg = new Message();
+    public ClientManager(GameFacade facade) : base(facade)
+    {
+    }
     public override void OnInit()
     {
         base.OnInit();
@@ -36,6 +39,7 @@ public class ClientManager :BaseManager{
             int count = clientSocket.EndReceive(ar);
 
             msg.ReadMessage(count,OnProcessDataCallback);
+            Start();
         }
         catch (Exception e)
         {
@@ -45,7 +49,7 @@ public class ClientManager :BaseManager{
 
     private void OnProcessDataCallback(RequestCode requestCode, string data)
     {
-        //TODO 服务器响应消息的处理
+        facade.HandleReponse(requestCode,data);// 服务器响应消息的处理
     }
 
     public void SendRequest(RequestCode requestCode,ActionCode actionCode,string data)

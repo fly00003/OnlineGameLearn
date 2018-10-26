@@ -23,7 +23,7 @@ public class UIManager:BaseManager {
     //        return _instance;
     //    }
     //}
-
+    private MessagePanel msgPanel;
     private Transform canvasTransform;
     private Transform CanvasTransform
     {
@@ -40,11 +40,18 @@ public class UIManager:BaseManager {
     private Dictionary<UIPanelType, BasePanel> panelDict;//保存所有实例化面板的游戏物体身上的BasePanel组件
     private Stack<BasePanel> panelStack;
 
-    public UIManager()
+    public UIManager(GameFacade facade):base(facade)
     {
         ParseUIPanelTypeJson();
     }
 
+    public override void OnInit()
+    {
+        base.OnInit();
+        PushPanel(UIPanelType.Message);
+        PushPanel(UIPanelType.Start);
+
+    }
     /// <summary>
     /// 把某个页面入栈，  把某个页面显示在界面上
     /// </summary>
@@ -108,6 +115,7 @@ public class UIManager:BaseManager {
             string path = panelPathDict.TryGet(panelType);
             GameObject instPanel = GameObject.Instantiate(Resources.Load(path)) as GameObject;
             instPanel.transform.SetParent(CanvasTransform,false);
+            instPanel.GetComponent<BasePanel>().UIMng = this;
             panelDict.Add(panelType, instPanel.GetComponent<BasePanel>());
             return instPanel.GetComponent<BasePanel>();
         }
@@ -137,14 +145,25 @@ public class UIManager:BaseManager {
             panelPathDict.Add(info.panelType, info.path);
         }
     }
-
+    public void InjectUiMng(MessagePanel msgPanel)
+    {
+        this.msgPanel = msgPanel;
+    }
+    public void ShowMessage(string msg)
+    {
+        if (msgPanel == null)
+        {
+            Debug.Log("无法显示提示信息，MsgPanel为空");return;
+        }
+        msgPanel.ShowMessage(msg);
+    }
     /// <summary>
     /// just for test
     /// </summary>
-    public void Test()
-    {
-        string path ;
-        panelPathDict.TryGetValue(UIPanelType.Knapsack,out path);
-        Debug.Log(path);
-    }
+    //public void Test()
+    //{
+    //    string path ;
+    //    panelPathDict.TryGetValue(UIPanelType.Knapsack,out path);
+    //    Debug.Log(path);
+    //}
 }
