@@ -15,12 +15,17 @@ namespace GameServer.Servers
         private Server server;
         private Message msg=new Message();
         private MySqlConnection mysqlConn;
+        public MySqlConnection MySqlConn
+        {
+            get { return mysqlConn; }
+        }
         public Client() { }
         public Client(Socket clientSocket,Server server)
         {
             this.clientSocket = clientSocket;
             this.server = server;
             mysqlConn = ConnHelper.Connect();
+            Start();
         }
         public void Start()
         {
@@ -36,6 +41,7 @@ namespace GameServer.Servers
                 {
                     Close();
                 }
+                Console.WriteLine(count);              
                 msg.ReadMessage(count,OnProcessMessage);
                 Start();
             }
@@ -61,9 +67,9 @@ namespace GameServer.Servers
                 clientSocket.Close();
             server.RemoveClient(this);
         }
-        public void Send(RequestCode requestCode, string data)
+        public void Send(ActionCode actionCode, string data)
         {
-            byte[] bytes = Message.PackData(requestCode,data);
+            byte[] bytes = Message.PackData(actionCode,data);
             clientSocket.Send(bytes);
         }
     }

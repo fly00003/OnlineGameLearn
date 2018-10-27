@@ -13,7 +13,7 @@ namespace GameServer.Servers
     {
         private IPEndPoint ipEndPoint;
         private Socket serverSocket;
-        private List<Client> clientList;
+        private List<Client> clientList=new List<Client>();
         private ControllerManager controllerManager;
         public Server()
         { }
@@ -39,6 +39,8 @@ namespace GameServer.Servers
             Socket clientSocket = serverSocket.EndAccept(ar);
             Client client = new Client(clientSocket,this);
             clientList.Add(client);
+            Console.WriteLine(client);
+            //Console.ReadKey();
         }
         public void RemoveClient(Client client)
         {
@@ -47,9 +49,9 @@ namespace GameServer.Servers
                 clientList.Remove(client);
             }
         }
-        public void SendResponse(Client client,RequestCode requestCode,string data)
+        public void SendResponse(Client client,ActionCode actionCode,string data)
         {
-            client.Send(requestCode,data);
+            client.Send(actionCode,data);
             //Server给客户端响应,ControllerMessager给Server响应
         }
         public void HandleRequest(RequestCode requestCode, ActionCode actionCode, string data, Client client)//client和server交互，server再和client交互，server相当于中介，让模块之间不那么混乱

@@ -5,7 +5,17 @@ using UnityEngine.UI;
 
 public class MessagePanel : BasePanel {
     private Text text;
+    private string message = null;
     private float showTime = 1f;
+    private void Update()
+    {
+        if(message!=null)
+        {
+            ShowMessage(message);
+            message = null;
+        }
+       
+    }
     public override void OnEnter()
     {
         base.OnEnter();
@@ -13,9 +23,13 @@ public class MessagePanel : BasePanel {
         text = GetComponent<Text>();
         text.enabled = false;
     }
+    public void ShowMessageSync(string msg)
+    {
+        message = msg;
+    }
     public void ShowMessage(string msg)
     {
-        text.color = Color.white;
+        text.CrossFadeAlpha(1, 0.2f, false);
         text.text = msg;
         text.enabled = true;
         Invoke("Hide",showTime);

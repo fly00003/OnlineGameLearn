@@ -5,22 +5,22 @@ using Common;
 public class RequestManager : BaseManager {
     public RequestManager(GameFacade facade) : base(facade){ }
 
-    private Dictionary<RequestCode, BaseRequest> requestDict = new Dictionary<RequestCode, BaseRequest>();
+    private Dictionary<ActionCode, BaseRequest> requestDict = new Dictionary<ActionCode, BaseRequest>();
 
-    public void AddRequest(RequestCode requestCode,BaseRequest request)
+    public void AddRequest(ActionCode actionCode,BaseRequest request)
     {
-        requestDict.Add(requestCode,request);
+        requestDict.Add(actionCode,request);
     }
-    public void RemoveRequest(RequestCode requestCode)
+    public void RemoveRequest(ActionCode actionCode)
     {
-        requestDict.Remove(requestCode);
+        requestDict.Remove(actionCode);
     }
-    public void HnadleReponse(RequestCode requestCode,string data)
+    public void HnadleReponse(ActionCode actionCode,string data)
     {
-        BaseRequest request = requestDict.TryGet<RequestCode, BaseRequest>(requestCode);
+        BaseRequest request = requestDict.TryGet<ActionCode, BaseRequest>(actionCode);
         if (request == null)
         {
-            Debug.LogWarning("无法得到RequestCode["+requestCode+"]对应的Request类"); return;
+            Debug.LogWarning("无法得到ActionCode["+actionCode+"]对应的Request类"); return;
 
         }
         request.OnResponse(data);

@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System;
 using Common;
 public class ClientManager :BaseManager{
-    private const string IP = "127.0.0.1";
+    private const string IP = "192.168.32.63";
     private const int PORT = 6688;
     private Socket clientSocket;
     private Message msg = new Message();
@@ -47,9 +47,9 @@ public class ClientManager :BaseManager{
         }
     }
 
-    private void OnProcessDataCallback(RequestCode requestCode, string data)
+    private void OnProcessDataCallback(ActionCode actionCode, string data)
     {
-        facade.HandleReponse(requestCode,data);// 服务器响应消息的处理
+        facade.HandleReponse(actionCode,data);// 服务器响应消息的处理
     }
 
     public void SendRequest(RequestCode requestCode,ActionCode actionCode,string data)
