@@ -56,7 +56,7 @@ public class LoginPanel : BasePanel {
 
     private void OnRegisterClick()
     {
-        throw new NotImplementedException();
+        uiMng.PushPanel(UIPanelType.Register);
     }
 
     private void OnCloseClick()
