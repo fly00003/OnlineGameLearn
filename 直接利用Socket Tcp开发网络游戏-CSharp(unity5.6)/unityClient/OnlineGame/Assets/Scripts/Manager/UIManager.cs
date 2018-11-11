@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System;
 
 public class UIManager:BaseManager {
-
     /// 
     /// 单例模式的核心
     /// 1，定义一个静态的对象 在外界访问 在内部构造
@@ -39,6 +38,7 @@ public class UIManager:BaseManager {
     private Dictionary<UIPanelType, string> panelPathDict;//存储所有面板Prefab的路径
     private Dictionary<UIPanelType, BasePanel> panelDict;//保存所有实例化面板的游戏物体身上的BasePanel组件
     private Stack<BasePanel> panelStack;
+    private UIPanelType panelTypeToPush=UIPanelType.None;
 
     public UIManager(GameFacade facade):base(facade)
     {
@@ -52,9 +52,22 @@ public class UIManager:BaseManager {
         PushPanel(UIPanelType.Start);
 
     }
+    public override void Update()
+    {
+        if (panelTypeToPush != UIPanelType.None)
+        {
+            PushPanel(panelTypeToPush);
+            panelTypeToPush = UIPanelType.None;
+        }
+    }
     /// <summary>
     /// 把某个页面入栈，  把某个页面显示在界面上
     /// </summary>
+    public void PushPanelSync(UIPanelType panelType)
+    {
+        panelTypeToPush = panelType;
+    }
+
     public void PushPanel(UIPanelType panelType)
     {
         if (panelStack == null)
@@ -116,6 +129,7 @@ public class UIManager:BaseManager {
             GameObject instPanel = GameObject.Instantiate(Resources.Load(path)) as GameObject;
             instPanel.transform.SetParent(CanvasTransform,false);
             instPanel.GetComponent<BasePanel>().UIMng = this;
+            instPanel.GetComponent<BasePanel>().Facade = facade;
             panelDict.Add(panelType, instPanel.GetComponent<BasePanel>());
             return instPanel.GetComponent<BasePanel>();
         }

@@ -29,6 +29,7 @@ namespace GameServer.Servers
         }
         public void Start()
         {
+            if (clientSocket == null || clientSocket.Connected == false) return;
             clientSocket.BeginReceive(msg.Data,msg.StartIndex,msg.RemainSize,SocketFlags.None,ReceiveCallback,null);
         }
 
@@ -36,6 +37,7 @@ namespace GameServer.Servers
         {
             try
             {
+                if (clientSocket == null || clientSocket.Connected==false) return;
                 int count = clientSocket.EndReceive(ar);
                 if (count == 0)
                 {

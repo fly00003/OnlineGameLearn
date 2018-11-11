@@ -18,7 +18,7 @@ namespace TCP服务端
        static void StartServerAsync()
         {
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress iPAddress = IPAddress.Parse("192.168.32.63");
+            IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint iPEndPoint = new IPEndPoint(iPAddress, 88);
             serverSocket.Bind(iPEndPoint);//绑定ip和端口号
             serverSocket.Listen(50);//开始监听，监听队列最多50个，当第51个客户端时需要排队等待直至监听队列中少于50个

@@ -7,11 +7,12 @@ using Common;
 using GameServer.Servers;
 using GameServer.Model;
 using GameServer.DAO;
-namespace GameServer.Controller
+namespace GameServer.Controller//调用查找等
 {
     class UserController:BaseController
     {
         private UserDAO userDAO = new UserDAO();
+        private ResultDAO resultDAO = new ResultDAO();
         public UserController()
         {
             requestCode = RequestCode.User;
@@ -27,7 +28,9 @@ namespace GameServer.Controller
             }
             else
             {
-                return ((int)ReturnCode.Success).ToString();
+                Result res = resultDAO.GetResultByUserID(client.MySqlConn,user.Id);
+
+                return string.Format("{0},{1},{2},{3}", ((int)ReturnCode.Success).ToString(), user.Username, res.TotalCount, res.WinCount);
             }
         }
         public string Register(string data,Client client,Server server)

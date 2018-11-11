@@ -8,5 +8,6 @@ namespace Common
     {
         None,
         User,
+        Room
     }
 }

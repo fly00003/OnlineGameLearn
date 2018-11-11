@@ -14,15 +14,8 @@ public class LoginPanel : BasePanel {
     private Button registerButton;
     private LoginRequest loginRequest;
 
-    public override void OnEnter()
+    void Start()
     {
-        base.OnEnter();
-        gameObject.SetActive(true);
-        transform.localScale = Vector3.zero;
-        transform.DOScale(1,0.5f);
-        transform.localPosition = new Vector3(1000,0,0);
-        transform.DOLocalMove(Vector3.zero,0.5f);
-
         loginRequest = GetComponent<LoginRequest>();
         usernameIF = transform.Find("UsernameLable/UsernameInput").GetComponent<InputField>();
         passwordIF = transform.Find("PasswordLable/PasswordInput").GetComponent<InputField>();
@@ -34,9 +27,17 @@ public class LoginPanel : BasePanel {
         registerButton.onClick.AddListener(OnRegisterClick);
 
     }
+    public override void OnEnter()
+    {
+        base.OnEnter();
+
+        OnEnterAnim();
+
+    }
 
     private void OnLoginClick()
     {
+        PlayClickSound();
         string msg = "";
         if (string.IsNullOrEmpty(usernameIF.text))
         {
@@ -56,11 +57,13 @@ public class LoginPanel : BasePanel {
 
     private void OnRegisterClick()
     {
+        PlayClickSound();
         uiMng.PushPanel(UIPanelType.Register);
     }
 
     private void OnCloseClick()
     {
+        PlayClickSound();
         transform.DOScale(0,0.4f);
         Tweener tweener = transform.DOLocalMove(new Vector3(1000,0,0),0.4f);
         tweener.OnComplete(()=>uiMng.PopPanel());
@@ -70,7 +73,7 @@ public class LoginPanel : BasePanel {
     {
         if (returnCode == ReturnCode.Success)
         {
-            //TODO
+            uiMng.PushPanelSync(UIPanelType.RoomList);
         }
         else
         {
@@ -78,12 +81,32 @@ public class LoginPanel : BasePanel {
         }
     }
 
+    public override void OnPause()
+    {
+        OnExitAnim();
+    }
+    public override void OnResume()
+    {
+        OnEnterAnim();
+    }
+
     public override void OnExit()
     {
         base.OnExit();
-        loginButton.onClick.RemoveListener(OnLoginClick);
-        registerButton.onClick.RemoveListener(OnRegisterClick);
-        closeButton.onClick.RemoveListener(OnCloseClick);
-        gameObject.SetActive(false);
+        OnExitAnim();
+    }
+    private void OnEnterAnim()
+    {
+        gameObject.SetActive(true);
+        transform.localScale = Vector3.zero;
+        transform.DOScale(1, 0.5f);
+        transform.localPosition = new Vector3(1000, 0, 0);
+        transform.DOLocalMove(Vector3.zero, 0.5f);
+    }
+    private void OnExitAnim()
+    {
+        transform.DOScale(0, 0.4f);
+        Tweener tweener = transform.DOLocalMove(new Vector3(1000, 0, 0), 0.4f);
+        tweener.OnComplete(() => gameObject.SetActive(false));
     }
 }

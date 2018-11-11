@@ -12,7 +12,7 @@ namespace TCP客户端
         static void Main(string[] args)
         {
             Socket clientSocket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
-            clientSocket.Connect(new IPEndPoint(IPAddress.Parse("192.168.32.63"), 88));//连接到服务器即可
+            clientSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 88));//连接到服务器即可
 
             byte[] data = new byte[1024];
             int count = clientSocket.Receive(data);//当建立连接的时候服务器会向客户端发送一条信息，客户端在这里接收，而且只有接收到信息才会继续向下

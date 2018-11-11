@@ -12,15 +12,8 @@ public class RegisterPanel : BasePanel {
     private Button closeBtn;
     private Button registerBtn;
     private RegisterRequest registerRequest;
-    public override void OnEnter()
+    void Start()
     {
-        base.OnEnter();
-        gameObject.SetActive(true);
-        transform.localScale = Vector3.zero;
-        transform.DOScale(1, 0.5f);
-        transform.localPosition = new Vector3(1000, 0, 0);
-        transform.DOLocalMove(Vector3.zero, 0.5f);
-
         usernameIF = transform.Find("UsernameLable/UsernameInput").GetComponent<InputField>();
         passwordIF = transform.Find("PasswordLable/PasswordInput").GetComponent<InputField>();
         rePasswordIF = transform.Find("RePasswordLable/RePasswordInput").GetComponent<InputField>();
@@ -30,9 +23,21 @@ public class RegisterPanel : BasePanel {
         registerBtn.onClick.AddListener(OnRegisterClick);
         registerRequest = GetComponent<RegisterRequest>();
     }
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        gameObject.SetActive(true);
+        transform.localScale = Vector3.zero;
+        transform.DOScale(1, 0.5f);
+        transform.localPosition = new Vector3(1000, 0, 0);
+        transform.DOLocalMove(Vector3.zero, 0.5f);
+
+
+    }
 
     private void OnRegisterClick()
     {
+        PlayClickSound();
         string msg = "";
         if (string.IsNullOrEmpty(usernameIF.text))
         {
@@ -58,6 +63,7 @@ public class RegisterPanel : BasePanel {
 
     private void OnCloseClick()
     {
+        PlayClickSound();
         transform.DOScale(0, 0.4f);
         Tweener tweener = transform.DOLocalMove(new Vector3(1000, 0, 0), 0.4f);
         tweener.OnComplete(() => uiMng.PopPanel());
@@ -65,8 +71,6 @@ public class RegisterPanel : BasePanel {
     public override void OnExit()
     {
         base.OnExit();
-        closeBtn.onClick.RemoveListener(OnCloseClick);
-        registerBtn.onClick.RemoveListener(OnRegisterClick);
         gameObject.SetActive(false);
     }
     public void OnRegisterResponse(ReturnCode returnCode)

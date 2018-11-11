@@ -36,8 +36,9 @@ public class ClientManager :BaseManager{
     {
         try
         {
-            int count = clientSocket.EndReceive(ar);
 
+            if (clientSocket == null || clientSocket.Connected == false) return;
+            int count = clientSocket.EndReceive(ar);
             msg.ReadMessage(count,OnProcessDataCallback);
             Start();
         }

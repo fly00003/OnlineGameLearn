@@ -14,6 +14,7 @@ namespace GameServer.Servers
         private IPEndPoint ipEndPoint;
         private Socket serverSocket;
         private List<Client> clientList=new List<Client>();
+        private List<Room> roomList = new List<Room>();
         private ControllerManager controllerManager;
         public Server()
         { }
@@ -40,6 +41,7 @@ namespace GameServer.Servers
             Client client = new Client(clientSocket,this);
             clientList.Add(client);
             Console.WriteLine(client);
+            serverSocket.BeginAccept(AcceptCallBack, null);
             //Console.ReadKey();
         }
         public void RemoveClient(Client client)
@@ -57,6 +59,12 @@ namespace GameServer.Servers
         public void HandleRequest(RequestCode requestCode, ActionCode actionCode, string data, Client client)//client和server交互，server再和client交互，server相当于中介，让模块之间不那么混乱
         {
             controllerManager.HandleRequest(requestCode,actionCode,data,client);
+        }
+        public void CreateRoom(Client client)
+        {
+            Room room = new Room();
+            room.AddClient(client);
+            roomList.Add(room);
         }
     }
 }

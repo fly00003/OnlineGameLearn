@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using GameServer.Model;
-namespace GameServer.DAO
+namespace GameServer.DAO//增删改查的具体方法
 {
     class UserDAO
     {
